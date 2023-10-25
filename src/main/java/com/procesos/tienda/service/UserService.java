@@ -1,7 +1,9 @@
 package com.procesos.tienda.service;
 
+import com.procesos.tienda.exception.NotFoundException;
 import com.procesos.tienda.model.User;
 import com.procesos.tienda.repository.UserRepository;
+import com.procesos.tienda.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,7 @@ public class UserService {
     public User updateUser(User userReq, Long id){
         Optional<User> userBd = userRepository.findById(id);
         if(userBd.isEmpty()){
-            return null;
+            throw new NotFoundException(Constants.USER_NOT_FOUND.getMessage());
         }
         userBd.get().setFirstName(userReq.getFirstName());
         userBd.get().setLastname(userReq.getLastname());
@@ -34,7 +36,7 @@ public class UserService {
     public boolean deleteUser(Long id){
         Optional<User> userBd = userRepository.findById(id);
         if(userBd.isEmpty()){
-            return false;
+            throw new NotFoundException(Constants.USER_NOT_FOUND.getMessage());
         }
         userRepository.delete(userBd.get());
         return true;
